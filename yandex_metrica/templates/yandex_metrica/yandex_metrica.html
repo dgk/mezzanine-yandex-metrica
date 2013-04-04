@@ -1,0 +1,71 @@
+{% load i18n %}
+{% spaceless %}
+{% if settings.YANDEX_METRICA_ID and not request.user.is_staffx %}
+{% if settings.YANDEX_METRICA__INFORMER_ALLOWED %}
+<!-- Yandex.Metrika informer -->
+<a href="http://metrica.yandex.com/stat/?id={{ settings.YANDEX_METRICA_ID }}&amp;from=informer"
+   target="_blank" rel="nofollow"><img src="//bs.yandex.ru/informer/{{ settings.YANDEX_METRICA_ID }}/{% if settings.YANDEX_METRICA__INFORMER_SIZE == '88x31' %}3{% endif %}{% if settings.YANDEX_METRICA__INFORMER_SIZE == '80x31' %}2{% endif %}{% if settings.YANDEX_METRICA__INFORMER_SIZE == '80x15' %}1{% endif %}_{{ settings.YANDEX_METRICA__INFORMER_ARROW_COLOR }}_{% if settings.YANDEX_METRICA__INFORMER_GRADIENT %}FFFFFFFF{% else %}{{ settings.YANDEX_METRICA__INFORMER_COLOR }}{% endif %}_{{ settings.YANDEX_METRICA__INFORMER_COLOR }}_{{ settings.YANDEX_METRICA__INFORMER_FONT_COLOR }}_{{ settings.YANDEX_METRICA__INFORMER_DATA_TYPE }}"
+   style="width:{{ settings.YANDEX_METRICA__INFORMER_SIZE|slice:":2" }}px; height:{{ settings.YANDEX_METRICA__INFORMER_SIZE|slice:"3:" }}px; border:0;"
+   alt="{% trans 'Yandex.Metrica' %}"
+   title="{% trans 'Yandex.Metrica: data for today' %} {% if settings.YANDEX_METRICA__INFORMER_SIZE == '88x31' %}{% trans '(page views, visits and unique visitors)' %}{% else %}{% if settings.YANDEX_METRICA__INFORMER_DATA_TYPE == 'pageviews' %}{% trans '(page views)' %}{% endif %}{% if settings.YANDEX_METRICA__INFORMER_DATA_TYPE == 'visits' %}{% trans '(visits)' %}{% endif %}{% if settings.YANDEX_METRICA__INFORMER_DATA_TYPE == 'uniques' %}{% trans '(unique visitors)' %}{% endif %}{% endif %}"
+   {% if settings.YANDEX_METRICA__INFORMER_TYPE == 1 %}
+       onclick="try{Ya.Metrika.informer({i:this,id:{{ settings.YANDEX_METRICA_ID }},lang:'en'{# TODO: lang #}});return false}catch(e){}"
+   {% endif %}
+/></a>
+<!-- /Yandex.Metrika informer -->
+{% endif %}
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        var yaCounterSettings = { id:{{ settings.YANDEX_METRICA_ID }} };
+        {% if settings.YANDEX_METRICA__WEBVISOR %}
+        yaCounterSettings.webvisor = true;
+        {% endif %}
+        {% if settings.YANDEX_METRICA__CLICKMAP %}
+            yaCounterSettings.clickmap = true;
+        {% endif %}
+        {% if settings.YANDEX_METRICA__TRACK_LINKS %}
+            yaCounterSettings.trackLinks = true;
+        {% endif %}
+        {% if settings.YANDEX_METRICA__ACCURATE_TRACK_BOUNCE %}
+            yaCounterSettings.accurateTrackBounce = true;
+        {% endif %}
+        {% if settings.YANDEX_METRICA__TRACK_HASH %}
+            yaCounterSettings.trackHash = true;
+        {% endif %}
+        {% if settings.YANDEX_METRICA__UT %}
+            yaCounterSettings.ut = "noindex";
+        {% endif %}
+    </script>
+    {% if settings.YANDEX_METRICA__ASYNC %}
+        <script type="text/javascript">
+            (function (d, w, c) {
+                (w[c] = w[c] || []).push(function() {
+                    try {
+                        w.yaCounter{{ settings.YANDEX_METRICA_ID }} = new Ya.Metrika(yaCounterSettings);
+                    } catch(e) { }
+                });
+                var n = d.getElementsByTagName("script")[0],
+                        s = d.createElement("script"),
+                        f = function () { n.parentNode.insertBefore(s, n); };
+                s.type = "text/javascript";
+                s.async = true;
+                s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+                if (w.opera == "[object Opera]") {
+                    d.addEventListener("DOMContentLoaded", f, false);
+                } else { f(); }
+            })(document, window, "yandex_metrika_callbacks");
+        </script>
+    {% else %}
+        <script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            try { var yaCounter{{ settings.YANDEX_METRICA_ID }} = new Ya.Metrika(yaCounterSettings);
+            } catch(e) { }
+        </script>
+    {% endif %}
+{% if not settings.YANDEX_METRICA__XML_SITE %}
+    <noscript><div><img src="//mc.yandex.ru/watch/{{ settings.YANDEX_METRICA_ID }}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+{% endif %}
+    <!-- /Yandex.Metrika counter -->
+{% endif %}
+{% endspaceless %}
